@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  api:
+    image: iron/titan-api
+    container_name: titan-api
+    network_mode: "bridge"
+    volumes:
+     - "./data:/titan/data"
+    environment:
+     DB: 'bolt:///titan/data/bolt.db?bucket=titan'
+    ports:
+     - "8080:8080"
+
+  worker:
+    image: iron/titan-runner
+    network_mode: "bridge"
+    environment: 
+     CONCURRENCY: 1
+     API_URL: 'http://${TITAN_API}:8080'
